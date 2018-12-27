@@ -5,3 +5,7 @@
 .DS_Store
 /build
 /captures
+/backend/build/
+.idea/vcs.xml
+jokeTeller/libs/
+jokedisplaylibrary/libs/
