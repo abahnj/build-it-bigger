@@ -17,17 +17,20 @@ public class JokeDisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joke_display);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        String joke = intent.getStringExtra(JokeDisplayActivity.JOKE_KEY);
-        TextView jokeTextView =  findViewById(R.id.joke_tv);
-        if (joke != null && joke.length() != 0) {
-            jokeTextView.setText(joke);
+        if (intent.hasExtra(JOKE_KEY)) {
+            String joke = intent.getStringExtra(JOKE_KEY);
+            TextView jokeTextView = findViewById(R.id.joke_tv);
+            if (joke != null && joke.length() != 0) {
+                jokeTextView.setText(joke);
+            }
         }
 
-        FloatingActionButton fab =  findViewById(R.id.fab);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,7 +39,6 @@ public class JokeDisplayActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }

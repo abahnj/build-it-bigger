@@ -1,20 +1,17 @@
 package com.udacity.gradle.builditbigger;
 
-import android.support.test.runner.AndroidJUnit4;
-
 import junit.framework.Assert;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.concurrent.ExecutionException;
 
 import androidx.test.rule.ActivityTestRule;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 
-@RunWith(AndroidJUnit4.class)
 public class AsyncTaskTest {
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule =
@@ -28,7 +25,7 @@ public class AsyncTaskTest {
 
         // the String returned in the onPostExecute is being retrieved
         String randomJoke = endpointsAsyncTask.get();
-
+        assertFalse(randomJoke.isEmpty());
         // If the string is not null, then we got a value, aka a joke
         assertNotNull(randomJoke);
     }

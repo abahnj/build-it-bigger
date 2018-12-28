@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.abahnj.jokedisplaylibrary.JokeDisplayActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.Objects;
 
@@ -34,6 +36,8 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
+        MobileAds.initialize(getContext(), "ca-app-pub-5820676795399080~3130548302");
+
         AdView mAdView =  root.findViewById(R.id.adView);
         jokeDisplayButton = root.findViewById(R.id.jokeButton);
 
@@ -51,23 +55,53 @@ public class MainActivityFragment extends Fragment {
 
         mAdView.loadAd(adRequest);
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                new EndpointsAsyncTask(result -> {
+                    Intent intent = new Intent(getActivity(), JokeDisplayActivity.class);
+                    intent.putExtra(JokeDisplayActivity.JOKE_KEY, result);
+                    startActivity(intent);
+                }).execute(getActivity());
+
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
+
         return root;
     }
 
     public void launchJokeActivity(View view) {
-
-        new EndpointsAsyncTask(result -> {
-            if (mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
-            } else {
-                Log.d("TAG", "The interstitial wasn't loaded yet.");
-            }
-            Intent intent = new Intent(getActivity(), JokeDisplayActivity.class);
-            intent.putExtra(JokeDisplayActivity.JOKE_KEY, result);
-            startActivity(intent);
-        }).execute(getActivity());
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
 
     }
+
+
 
 
 }
